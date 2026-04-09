@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import { Formik, useFormik } from "formik";
+import React, { useEffect } from "react";
+import { useFormik } from "formik";
 import {
   Box,
   Button,
@@ -15,30 +15,43 @@ import {
 import * as Yup from 'yup';
 import FullScreenSection from "./FullScreenSection";
 import useSubmit from "../hooks/useSubmit";
-import {useAlertContext} from "../context/alertContext";
+import { useAlertContext } from "../context/alertContext";
 
-const LandingSection = () => {
-  const {isLoading, response, submit} = useSubmit();
+const ContactMeSection = () => {
+  const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
 
   const formik = useFormik({
-    initialValues: {firstName: "",
+    initialValues: {
+      firstName: "",
       email: "",
       type: "",
-      comment: ""},
-      onSubmit: (values) => {
-        submit("fake.url", { values });
+      comment: "",
+    },
+    onSubmit: async (values) => {
+      await submit("fake.url", values);
     },
     validationSchema: Yup.object().shape({
       firstName: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Name is required'),
-      email: Yup.string().email('Invalid email address'),
-      type: Yup.string(),
+      email: Yup.string().email('Invalid email address').required('Email is required'),
+      type: Yup.string().required('Please select an enquiry type'),
       comment: Yup.string().required('Comments are required'),
     }),
   });
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+
+    onOpen(response.type, response.message);
+    if (response.type === "success") {
+      formik.resetForm();
+    }
+  }, [response, onOpen]);
 
   return (
     <FullScreenSection
@@ -59,7 +72,7 @@ const LandingSection = () => {
                 <Input
                   id="firstName"
                   name="firstName"
-                  {...formik.getFieldProps('firstName')} 
+                  {...formik.getFieldProps('firstName')}
                 />
                 <FormErrorMessage name="firstName" component="div" className="error">
                   {formik.errors.firstName}
@@ -71,22 +84,23 @@ const LandingSection = () => {
                   id="email"
                   name="email"
                   type="email"
-                  {...formik.getFieldProps('email')} 
+                  {...formik.getFieldProps('email')}
                 />
                 <FormErrorMessage name="email" component="div" className="error">
                   {formik.errors.email}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={false}>
+              <FormControl isInvalid={formik.touched.type && formik.errors.type}>
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
-                <Select id="type" name="type" color="white"
-                  {...formik.getFieldProps('type')} >
+                <Select id="type" name="type" color="white" {...formik.getFieldProps('type')}>
+                    <option value="">Select one</option>
                     <option value="hireMe">Freelance project proposal</option>
                     <option value="openSource">
                       Open source consultancy session
                     </option>
                     <option value="other">Other</option>
                 </Select>
+                <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={formik.touched.comment && formik.errors.comment}>
                 <FormLabel htmlFor="comment">Your message</FormLabel>
@@ -94,16 +108,15 @@ const LandingSection = () => {
                   id="comment"
                   name="comment"
                   height={250}
-                  value={formik.values.comment}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  {...formik.getFieldProps('comment')}
                 />
                 <FormErrorMessage name="comment" component="div" className="error">
                   {formik.errors.comment}
                 </FormErrorMessage>
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full"
-                isDisabled={!formik.isValid || formik.isSubmitting}>
+                isLoading={isLoading}
+                isDisabled={!formik.isValid || !formik.dirty || isLoading}>
                 Submit
               </Button>
             </VStack>
@@ -114,4 +127,4 @@ const LandingSection = () => {
   );
 };
 
-export default LandingSection;
+export default ContactMeSection;
