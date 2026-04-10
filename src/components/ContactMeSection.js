@@ -28,21 +28,21 @@ const ContactMeSection = () => {
       type: "",
       comment: "",
     },
-    onSubmit: async (values) => {
-      await submit("fake.url", values);
+      onSubmit: async (values) => {
+        await submit("fake.url", values);
     },
     validationSchema: Yup.object().shape({
       firstName: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Name is required'),
-      email: Yup.string().email('Invalid email address').required('Email is required'),
-      type: Yup.string().required('Please select an enquiry type'),
-      comment: Yup.string().required('Comments are required'),
+        .min(2, "Too Short!")
+        .max(50, "Too Long!")
+        .required("Name is required"),
+      email: Yup.string().email("Invalid email address").required("Email is required"),
+      type: Yup.string().required("Please select an enquiry type"),
+      comment: Yup.string().required("Comments are required"),
     }),
   });
 
-  useEffect(() => {
+    useEffect(() => {
     if (!response) {
       return;
     }
@@ -53,6 +53,7 @@ const ContactMeSection = () => {
     }
   }, [response, onOpen]);
 
+  const optionsStyle = { color: 'black' };
   return (
     <FullScreenSection
       isDarkBackground
@@ -72,7 +73,7 @@ const ContactMeSection = () => {
                 <Input
                   id="firstName"
                   name="firstName"
-                  {...formik.getFieldProps('firstName')}
+                  {...formik.getFieldProps('firstName')} 
                 />
                 <FormErrorMessage name="firstName" component="div" className="error">
                   {formik.errors.firstName}
@@ -84,7 +85,7 @@ const ContactMeSection = () => {
                   id="email"
                   name="email"
                   type="email"
-                  {...formik.getFieldProps('email')}
+                  {...formik.getFieldProps('email')} 
                 />
                 <FormErrorMessage name="email" component="div" className="error">
                   {formik.errors.email}
@@ -92,13 +93,17 @@ const ContactMeSection = () => {
               </FormControl>
               <FormControl isInvalid={formik.touched.type && formik.errors.type}>
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
-                <Select id="type" name="type" color="white" {...formik.getFieldProps('type')}>
-                    <option value="" style={{color: 'black'}}>Select one</option>
-                    <option value="hireMe" style={{color: 'black'}}>Freelance project proposal</option>
-                    <option value="openSource" style={{color: 'black'}}>
+                <Select id="type" name="type" color="white"
+                  {...formik.getFieldProps('type')} >
+                    <option value="" style={optionsStyle}>Select one</option>
+                    <option value="hireMe" style={optionsStyle}>
+                      Freelance project proposal</option>
+                    <option value="openSource" style={optionsStyle}>
                       Open source consultancy session
                     </option>
-                    <option value="other" style={{color: 'black'}}>Other</option>
+                    <option value="other" style={optionsStyle}>
+                      Other
+                    </option>
                 </Select>
                 <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
               </FormControl>
