@@ -93,12 +93,12 @@ const ContactMeSection = () => {
               <FormControl isInvalid={formik.touched.type && formik.errors.type}>
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
                 <Select id="type" name="type" color="white" {...formik.getFieldProps('type')}>
-                    <option value="">Select one</option>
-                    <option value="hireMe">Freelance project proposal</option>
-                    <option value="openSource">
+                    <option value="" style={{color: 'black'}}>Select one</option>
+                    <option value="hireMe" style={{color: 'black'}}>Freelance project proposal</option>
+                    <option value="openSource" style={{color: 'black'}}>
                       Open source consultancy session
                     </option>
-                    <option value="other">Other</option>
+                    <option value="other" style={{color: 'black'}}>Other</option>
                 </Select>
                 <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
               </FormControl>

@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 const AlertContext = createContext(undefined);
 
@@ -11,14 +11,25 @@ export const AlertProvider = ({ children }) => {
     message: '',
   });
 
+  const onOpen = useCallback((type, message) => {
+    setState({ isOpen: true, type, message });
+  }, []);
+
+  const onClose = useCallback(() => {
+    setState((prev) => ({ ...prev, isOpen: false }));
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      ...state,
+      onOpen,
+      onClose,
+    }),
+    [state, onOpen, onClose],
+  );
+
   return (
-    <AlertContext.Provider
-      value={{
-        ...state,
-        onOpen: (type, message) => setState({ isOpen: true, type, message }),
-        onClose: () => setState({ isOpen: false, type: '', message: '' }),
-      }}
-    >
+    <AlertContext.Provider value={value}>
       {children}
     </AlertContext.Provider>
   );
