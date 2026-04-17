@@ -16,7 +16,7 @@ const socials = [
   },
   {
     icon: faGithub,
-    url: "https://github.com",
+    url: "https://github.com/skush",
   },
   {
     icon: faLinkedin,
@@ -105,7 +105,12 @@ const Header = () => {
               <HStack spacing={4}>
                 {
                   socials.map(({ icon, url }) => (
-                    <a key={url} href={url}>
+                    <a
+                      key={url}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <FontAwesomeIcon icon={icon} size="2x" />
                     </a>
                   ))

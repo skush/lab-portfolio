@@ -11,7 +11,7 @@ const Card = ({ title, description, imageSrc }) => {
       color="black"
       align="flex-start">
       <Image
-        src={`${window.location.origin}/serve${imageSrc}`}
+        src={imageSrc}
         borderRadius={8}
         height={300}
         width="100%" />
