@@ -42,14 +42,12 @@ const ContactMeSection = () => {
     }),
   });
 
-    useEffect(() => {
-    if (!response) {
-      return;
-    }
-
-    onOpen(response.type, response.message);
-    if (response.type === "success") {
-      formik.resetForm();
+  useEffect(() => {
+    if (response) {
+      onOpen(response.type, response.message);
+      if (response.type === "success") {
+        formik.resetForm();
+      }
     }
   }, [response, onOpen]);
 
